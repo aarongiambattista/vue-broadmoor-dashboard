@@ -4,7 +4,11 @@
     "database-type": "mssql",
     "connection-string": "@env('CONNECTION_STRING')"
   },
-  "entities": {
+  "runtime": {
+  "host": {
+    "mode": "development"
+  }
+},"entities": {
     "Weather": {
       "source": "dbo.WeatherData",
       "rest": true,
