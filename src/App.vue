@@ -91,7 +91,7 @@ const pressureSeries = computed(() => [{ name: 'Pressure (inHg)', data: (weather
 // --- Fetch Data ---
 const fetchData = async () => {
   try {
-    const response = await axios.get('/data-api/rest/Weather?$orderby=dateutc desc&$top=2000'); 
+    const response = await axios.get('/api/rest/Weather?$orderby=dateutc desc&$top=2000'); 
     
     if (response.data && Array.isArray(response.data.value)) {
         weatherData.value = response.data.value;
