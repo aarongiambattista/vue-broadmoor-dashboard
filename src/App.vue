@@ -5,8 +5,6 @@ import VueApexCharts from 'vue3-apexcharts';
 
 // --- State ---
 const weatherData = ref([]); 
-const loading = ref(true);
-
 // Ensure your reactive variable is initialized as an empty array
 
 async function fetchWeatherData() {
@@ -166,8 +164,8 @@ fetchWeatherData();
       </div>
     </header>
 
-    <div v-if="loading" class="text-center py-20 text-slate-400">Loading dashboard...</div>
-
+<div v-if="weatherData.length > 0"> ... your dashboard ... </div> <div v-else> Loading dashboard... </div>
+    
     <div v-else class="max-w-7xl mx-auto w-full space-y-6 flex-grow">
       
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" v-if="current">
