@@ -7,6 +7,15 @@ import VueApexCharts from 'vue3-apexcharts';
 const weatherData = ref([]); 
 const loading = ref(true);
 
+async function fetchWeatherData() {
+  try {
+    const response = await fetch('/api/GetWeather');
+    weatherData.value = await response.json();
+  } catch (error) {
+    console.error("API Error:", error);
+  }
+}
+
 // --- Computed Stats ---
 const current = computed(() => {
   if (!weatherData.value || !Array.isArray(weatherData.value) || weatherData.value.length === 0) return null;
@@ -124,7 +133,7 @@ const loadSampleData = () => {
 };
 
 onMounted(() => {
-  fetchData();
+fetchWeatherData();
 });
 </script>
 
