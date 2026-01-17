@@ -1,7 +1,0 @@
-{
-  "properties": {
-    "resourceId": "/subscriptions/3dc5a713-c63e-4990-90c3-01d42afd6aa2/resourceGroups/2025AppServicePlans/providers/Microsoft.Sql/servers/broadmoorweather/databases/Weatherdata",
-    "connectionString": "Server=tcp:broadmoorweather.database.windows.net,1433;Initial Catalog=Weatherdata;User ID=aarong;Password=Notebook1!;",
-    "region": "East US 2"
-  }
-}
