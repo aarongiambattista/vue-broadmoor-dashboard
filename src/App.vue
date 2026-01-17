@@ -7,12 +7,20 @@ import VueApexCharts from 'vue3-apexcharts';
 const weatherData = ref([]); 
 const loading = ref(true);
 
+// Ensure your reactive variable is initialized as an empty array
+
 async function fetchWeatherData() {
   try {
     const response = await fetch('/api/GetWeather');
-    weatherData.value = await response.json();
+    const data = await response.json();
+    
+    // Assign the full array to your variable
+    weatherData.value = data;
+    
+    // Debug: Check this in your browser console (F12)
+    console.log("Latest Temp:", data[0].tempf); 
   } catch (error) {
-    console.error("API Error:", error);
+    console.error("Failed to load weather:", error);
   }
 }
 
