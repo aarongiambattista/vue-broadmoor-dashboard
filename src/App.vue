@@ -295,8 +295,14 @@ export default {
   methods: {
     async fetchData() {
       try {
-        const response = await fetch('/api/GetWeather');
-        const data = await response.json();
+        const [weatherRes, statsRes] = await Promise.all([
+          fetch('/api/GetWeather'),
+          fetch('/api/GetWeatherStats'),
+        ]);
+
+        const data = await weatherRes.json();
+        const stats = await statsRes.json();
+
         this.weatherData = data;
 
         if (data.length > 0) {
@@ -328,88 +334,39 @@ export default {
           this.lastSyncTime = `${hours}:${minutes} ${ampm}`;
         }
 
-        this.compute30DayStats(data);
-        this.computeAllTimeStats(data);
+        // Map API stats to the format the template expects
+        if (stats.stats30d) {
+          const s = stats.stats30d;
+          this.stats30d = {
+            tempHigh: s.temp_high,
+            tempLow: s.temp_low,
+            humidityHigh: s.humidity_high,
+            humidityLow: s.humidity_low,
+            windHigh: s.wind_high,
+            windLow: s.wind_low,
+            pressureHigh: s.pressure_high,
+            pressureLow: s.pressure_low,
+          };
+        }
+
+        if (stats.statsAllTime) {
+          const s = stats.statsAllTime;
+          this.statsAllTime = {
+            tempHigh: s.temp_high,
+            tempLow: s.temp_low,
+            humidityHigh: s.humidity_high,
+            humidityLow: s.humidity_low,
+            windHigh: s.wind_high,
+            windLow: s.wind_low,
+            pressureHigh: s.pressure_high,
+            pressureLow: s.pressure_low,
+          };
+        }
+
         this.renderCharts(data);
       } catch (err) {
         console.error('Failed to fetch weather data:', err);
       }
-    },
-
-    compute30DayStats(data) {
-      if (!data || data.length === 0) return;
-
-      const now = Date.now();
-      const thirtyDaysAgo = now - 30 * 24 * 60 * 60 * 1000;
-      const filtered = data.filter((d) => d.dateutc >= thirtyDaysAgo);
-
-      if (filtered.length === 0) return;
-
-      let tempHigh = -Infinity,
-        tempLow = Infinity;
-      let humidityHigh = -Infinity,
-        humidityLow = Infinity;
-      let windHigh = -Infinity,
-        windLow = Infinity;
-      let pressureHigh = -Infinity,
-        pressureLow = Infinity;
-
-      filtered.forEach((d) => {
-        if (d.tempf > tempHigh) tempHigh = d.tempf;
-        if (d.tempf < tempLow) tempLow = d.tempf;
-        if (d.humidity > humidityHigh) humidityHigh = d.humidity;
-        if (d.humidity < humidityLow) humidityLow = d.humidity;
-        if (d.windspeedmph > windHigh) windHigh = d.windspeedmph;
-        if (d.windspeedmph < windLow) windLow = d.windspeedmph;
-        if (d.baromrelin > pressureHigh) pressureHigh = d.baromrelin;
-        if (d.baromrelin < pressureLow) pressureLow = d.baromrelin;
-      });
-
-      this.stats30d = {
-        tempHigh: tempHigh.toFixed(1),
-        tempLow: tempLow.toFixed(1),
-        humidityHigh,
-        humidityLow,
-        windHigh: windHigh.toFixed(2),
-        windLow: windLow.toFixed(2),
-        pressureHigh: pressureHigh.toFixed(3),
-        pressureLow: pressureLow.toFixed(3),
-      };
-    },
-
-    computeAllTimeStats(data) {
-      if (!data || data.length === 0) return;
-
-      let tempHigh = -Infinity,
-        tempLow = Infinity;
-      let humidityHigh = -Infinity,
-        humidityLow = Infinity;
-      let windHigh = -Infinity,
-        windLow = Infinity;
-      let pressureHigh = -Infinity,
-        pressureLow = Infinity;
-
-      data.forEach((d) => {
-        if (d.tempf > tempHigh) tempHigh = d.tempf;
-        if (d.tempf < tempLow) tempLow = d.tempf;
-        if (d.humidity > humidityHigh) humidityHigh = d.humidity;
-        if (d.humidity < humidityLow) humidityLow = d.humidity;
-        if (d.windspeedmph > windHigh) windHigh = d.windspeedmph;
-        if (d.windspeedmph < windLow) windLow = d.windspeedmph;
-        if (d.baromrelin > pressureHigh) pressureHigh = d.baromrelin;
-        if (d.baromrelin < pressureLow) pressureLow = d.baromrelin;
-      });
-
-      this.statsAllTime = {
-        tempHigh: tempHigh.toFixed(1),
-        tempLow: tempLow.toFixed(1),
-        humidityHigh,
-        humidityLow,
-        windHigh: windHigh.toFixed(2),
-        windLow: windLow.toFixed(2),
-        pressureHigh: pressureHigh.toFixed(3),
-        pressureLow: pressureLow.toFixed(3),
-      };
     },
 
     renderCharts(data) {
