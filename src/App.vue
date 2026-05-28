@@ -81,6 +81,16 @@
           <div class="lightning-distance">{{ currentData.lightning_distance }} miles away</div>
           <div class="lightning-time">Detected: {{ lightningTimeFormatted }}</div>
         </div>
+        <div class="lightning-counts">
+          <div class="lightning-count-item">
+            <div class="lightning-count-value">{{ currentData.lightning_hour }}</div>
+            <div class="lightning-count-label">THIS HOUR</div>
+          </div>
+          <div class="lightning-count-item">
+            <div class="lightning-count-value">{{ currentData.lightning_day }}</div>
+            <div class="lightning-count-label">TODAY</div>
+          </div>
+        </div>
       </div>
 
       <!-- 30-Day High/Low Stats (NEW) -->
@@ -243,6 +253,7 @@ export default {
         lightning_distance: '--',
         lightning_time: null,
         lightning_day: 0,
+        lightning_hour: 0,
       },
       stats30d: {
         tempHigh: '--',
@@ -323,6 +334,7 @@ export default {
             lightning_distance: latest.lightning_distance,
             lightning_time: latest.lightning_time,
             lightning_day: latest.lightning_day,
+            lightning_hour: latest.lightning_hour,
           };
 
           // Format last sync time
@@ -718,6 +730,29 @@ body {
   font-size: 13px;
   color: #68d391;
   font-style: italic;
+}
+
+.lightning-counts {
+  margin-left: auto;
+  display: flex;
+  gap: 24px;
+}
+
+.lightning-count-item {
+  text-align: center;
+}
+
+.lightning-count-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1a202c;
+}
+
+.lightning-count-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: #a0aec0;
+  letter-spacing: 0.5px;
 }
 
 /* High/Low Cards */
