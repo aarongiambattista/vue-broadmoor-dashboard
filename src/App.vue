@@ -295,7 +295,7 @@ export default {
   methods: {
     async fetchData() {
       try {
-        const response = await fetch('/api/getweatherdata');
+        const response = await fetch('/api/GetWeather');
         const data = await response.json();
         this.weatherData = data;
 
