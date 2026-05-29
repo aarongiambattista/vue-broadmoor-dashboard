@@ -337,10 +337,12 @@ export default {
             lightning_hour: latest.lightning_hour,
           };
 
-          // Format last sync time
-          const syncDate = new Date(latest.LocalTimeCST || latest.date);
-          let hours = syncDate.getHours();
-          const minutes = syncDate.getMinutes().toString().padStart(2, '0');
+          // Format last sync time — LocalTimeCST is already Central Time,
+          // so parse without letting JS treat it as UTC
+          const timeStr = latest.LocalTimeCST || latest.date;
+          const parts = timeStr.match(/(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
+          let hours = parseInt(parts[4], 10);
+          const minutes = parts[5];
           const ampm = hours >= 12 ? 'PM' : 'AM';
           hours = hours % 12 || 12;
           this.lastSyncTime = `${hours}:${minutes} ${ampm}`;
